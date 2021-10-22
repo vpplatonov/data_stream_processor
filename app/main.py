@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())
 
+file_prefix = '../'
 plugins_path = 'plugins'
 chunksize = 1000
 num_error = 1
@@ -18,7 +19,7 @@ num_error = 1
 
 def init():
     # get list of Alerter plugins
-    plugins = ["." + file.split(".py")[0].split("plugins/")[1]
+    plugins = ["." + file.split(".py")[0].split(f"{plugins_path}/")[1]
                for file in glob.glob(plugins_path + '/alerter*.py')]
     # Initialising our application
     app = DataStreamProcessor(
@@ -32,7 +33,7 @@ def init():
 def file_list_prepare(del_processed=True):
     while True:
         # Running our application
-        csv_files = glob.glob('../csv/*.csv')
+        csv_files = glob.glob(os.path.join(file_prefix, 'csv/*.csv'))
 
         if not csv_files:
             logger.info("no files for processing")

@@ -1,3 +1,6 @@
+import glob
+import os.path
+
 import pandas as pd
 import pytest
 
@@ -19,6 +22,12 @@ def get_plugin_one(app):
 @pytest.fixture(name="plugin_two", scope="function")
 def get_plugin_two(app):
     yield app._plugins[1]
+
+
+def test_read_csv(csv_gen, file_prefix):
+    csv_files = glob.glob(os.path.join(file_prefix, 'csv/*.csv'))
+
+    assert csv_files
 
 
 def test_main(csv_gen, app):
