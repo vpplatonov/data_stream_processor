@@ -29,7 +29,7 @@ def init():
     return app
 
 
-def file_list_prepare():
+def file_list_prepare(del_processed=True):
     while True:
         # Running our application
         csv_files = glob.glob('../csv/*.csv')
@@ -39,13 +39,14 @@ def file_list_prepare():
             sleep(1)
             continue
 
-        # remove file after processing
         for file in csv_files:
-            logger.info(f"{file=} processing")
 
             yield file
 
-            os.remove(file)
+        # remove file after processing
+        if del_processed:
+            for file in csv_files:
+                os.remove(file)
 
 
 def chunk_generator(csv_files: iter):
@@ -57,20 +58,27 @@ def chunk_generator(csv_files: iter):
     """
 
     for file in csv_files:
-        with pd.read_csv(file, chunksize=chunksize, parse_dates=["datetime"]) as reader:
+        logger.info(f"{file=} processing")
+
+        with pd.read_csv(
+                file,
+                chunksize=chunksize,
+                parse_dates=["datetime"]
+        ) as reader:
 
             # num_iter = reader.len()
             for idx, chunk in enumerate(reader):
                 yield chunk, file, idx  # , num_iter
 
 
-def main():
+def main(del_processed=True):
 
     app = init()
 
-    file_list = list(file_list_prepare())
-    for chunk, file, idx in chunk_generator(file_list):
-        app.run(df=chunk, num_error=num_error)
+    for chunk, file, idx in chunk_generator(
+            file_list_prepare(del_processed=del_processed)
+    ):
+        app.run(df=chunk, num_error=num_error, logger=logger)
 
 
 if __name__ == "__main__":

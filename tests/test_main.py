@@ -1,13 +1,13 @@
 import pandas as pd
 import pytest
 
-from app.main import chunksize, chunk_generator
+from app.main import chunksize, chunk_generator, logger
 
 
 @pytest.fixture(name="chunk", scope="function")
 def get_chunk(csv_gen, app):
 
-    for chunk, file, idx in chunk_generator(csv_gen):
+    for chunk, file, idx in chunk_generator((f for f in csv_gen)):
         yield chunk, file, idx
 
 
@@ -39,7 +39,11 @@ def test_plugin_one(chunk, plugin_one):
     assert isinstance(file, str)
 
     try:
-        result = plugin_one.process(chnk, num_error=1)
+        result = plugin_one.process(
+            chnk,
+            num_error=1,
+            logger=logger
+        )
     except Exception as e_info:
         pytest.fail(f"{e_info}")
     else:
@@ -51,7 +55,11 @@ def test_plugin_two(chunk, plugin_two):
     assert not chnk.empty
 
     try:
-        result = plugin_two.process(chnk, num_error=1)
+        result = plugin_two.process(
+            chnk,
+            num_error=1,
+            logger=logger
+        )
     except Exception as e_info:
         pytest.fail(f"{e_info}")
     else:
