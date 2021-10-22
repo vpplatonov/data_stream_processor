@@ -9,16 +9,17 @@ class Alerter:
         if "logger" not in kwargs:
             raise Exception("logger is not available")
 
-        logger = kwargs["logger"]
+        if "bundle_id" not in kwargs:
+            raise Exception("bundle_id is not available")
 
         try:
             # df['datetime'] = pd.to_datetime(df['datetime'], format="%Y-%m-%d %H")
             df['hours'] = df['datetime'].apply(lambda x: x.strftime('%Y%m%d%H')).astype(int)
-            alerter = df.groupby(["bundle_id", "hours"])["datetime"].count().to_numpy()
+            alerter = df[df["bundle_id"] == kwargs["bundle_id"]].groupby(["hours"])["datetime"].count().to_numpy()
             res = alerter[alerter > num_error]
             if res:
-                logger.error(f"{__name__}: {res}")
+                kwargs["logger"].info(f"{__name__}: {res}")
 
             return res
         except Exception as e:
-            logger.exception(e)
+            kwargs["logger"].exception(e)

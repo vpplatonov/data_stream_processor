@@ -5,7 +5,7 @@ from time import sleep
 
 import pandas as pd
 
-from core import DataStreamProcessor
+from app.core import DataStreamProcessor
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -79,7 +79,12 @@ def main(del_processed=True):
     for chunk, file, idx in chunk_generator(
             file_list_prepare(del_processed=del_processed)
     ):
-        app.run(df=chunk, num_error=num_error, logger=logger)
+        app.run(
+            df=chunk,
+            num_error=num_error,
+            logger=logger,
+            bundle_id="alerter_two"  # specific-bundle_id
+        )
 
 
 if __name__ == "__main__":

@@ -51,7 +51,8 @@ def test_plugin_one(chunk, plugin_one):
         result = plugin_one.process(
             chnk,
             num_error=1,
-            logger=logger
+            logger=logger,
+            bundle_id="alerter_two"
         )
     except Exception as e_info:
         pytest.fail(f"{e_info}")
@@ -67,7 +68,8 @@ def test_plugin_two(chunk, plugin_two):
         result = plugin_two.process(
             chnk,
             num_error=1,
-            logger=logger
+            logger=logger,
+            bundle_id="alerter_two"
         )
     except Exception as e_info:
         pytest.fail(f"{e_info}")
