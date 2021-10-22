@@ -9,10 +9,14 @@ class Alerter:
     # Define static method, so no self parameter
 
     @staticmethod
-    def process(data):
+    def process(df, num_error: int = 10):
         # Some prints to identify which plugin is been used
-        logger.info(f"{__name__} alert")
+        # Alert over 10 error or fatal logs in less than an hour for a specific bundle id
         try:
-            logger.info(data)
+            # df['datetime'] = pd.to_datetime(df['datetime'], format="%Y-%m-%d %H")
+            df['hours'] = df['datetime'].apply(lambda x: x.strftime('%Y%m%d%H')).astype(int)
+            alerter = df.groupby(["bundle_id", "hours"])["datetime"].count().to_numpy()
+            if alerter[alerter > num_error]:
+                logger.error(f"{alerter[alerter > num_error]}")
         except Exception as e:
             logger.exception(e)

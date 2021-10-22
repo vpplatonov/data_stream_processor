@@ -30,4 +30,4 @@ class Alerter:
 ```
 
 ### Pandas as Stream Reader
-[Support a bunch of data types](https://pandas.pydata.org/docs/user_guide/io.html#io-chunking)
+[Support a bunch of data types](https://pandas.pydata.org/docs/user_guide/io.html)

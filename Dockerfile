@@ -19,7 +19,7 @@ RUN pip install --upgrade pip
 COPY ./requirements.txt /usr/src/app/
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
 
-COPY ./app/ /usr/src/app/app
+COPY app/ /usr/src/app/app
 
 # pull official base image
 FROM python:3.9.6-slim-buster as final
