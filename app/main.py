@@ -13,6 +13,7 @@ logger.addHandler(logging.StreamHandler())
 
 plugins_path = 'plugins'
 chunksize = 1000
+num_error = 1
 
 
 def init():
@@ -38,10 +39,12 @@ def file_list_prepare():
             sleep(1)
             continue
 
-        yield csv_files
-
         # remove file after processing
         for file in csv_files:
+            logger.info(f"{file=} processing")
+
+            yield file
+
             os.remove(file)
 
 
@@ -53,11 +56,10 @@ def chunk_generator(csv_files: iter):
     :return: yield chunk, file, idx
     """
 
-    for file in next(csv_files):
+    for file in csv_files:
         with pd.read_csv(file, chunksize=chunksize, parse_dates=["datetime"]) as reader:
 
             # num_iter = reader.len()
-
             for idx, chunk in enumerate(reader):
                 yield chunk, file, idx  # , num_iter
 
@@ -66,8 +68,9 @@ def main():
 
     app = init()
 
-    for chunk, file, idx in chunk_generator(file_list_prepare()):
-        app.run(data=chunk)
+    file_list = list(file_list_prepare())
+    for chunk, file, idx in chunk_generator(file_list):
+        app.run(df=chunk, num_error=num_error)
 
 
 if __name__ == "__main__":

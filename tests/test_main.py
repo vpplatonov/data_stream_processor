@@ -39,9 +39,11 @@ def test_plugin_one(chunk, plugin_one):
     assert isinstance(file, str)
 
     try:
-        plugin_one.process(chnk, num_error=1)
+        result = plugin_one.process(chnk, num_error=1)
     except Exception as e_info:
         pytest.fail(f"{e_info}")
+    else:
+        assert result == [3]
 
 
 def test_plugin_two(chunk, plugin_two):
@@ -49,6 +51,8 @@ def test_plugin_two(chunk, plugin_two):
     assert not chnk.empty
 
     try:
-        plugin_two.process(chnk, num_error=1)
+        result = plugin_two.process(chnk, num_error=1)
     except Exception as e_info:
         pytest.fail(f"{e_info}")
+    else:
+        assert result == [3]

@@ -13,11 +13,11 @@ class DataStreamProcessor:
                 importlib.import_module(plugin, path).Alerter() for plugin in plugins
             ]
 
-    def run(self, data: Any = None):
+    def run(self, df: Any = None, **kwargs):
         accumulator = {}
         # We is were magic happens, and all the plugins are going to be printed
         for plugin in self._plugins:
             key = str(plugin).split(".")[1]
-            accumulator[key] = plugin.process(data)
+            accumulator[key] = plugin.process(df, **kwargs)
 
         return accumulator

@@ -16,7 +16,10 @@ class Alerter:
             # df['datetime'] = pd.to_datetime(df['datetime'], format="%Y-%m-%d %H")
             df['hours'] = df['datetime'].apply(lambda x: x.strftime('%Y%m%d%H')).astype(int)
             alerter = df.groupby(["bundle_id", "hours"])["datetime"].count().to_numpy()
-            if alerter[alerter > num_error]:
-                logger.error(f"{alerter[alerter > num_error]}")
+            res = alerter[alerter > num_error]
+            if res:
+                logger.error(f"{res}")
+
+            return res
         except Exception as e:
             logger.exception(e)
