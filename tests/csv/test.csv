@@ -1,0 +1,5 @@
+error_type,datetime,bundle_id
+fatal,20211021 22:22:22,alerter_one
+error,20211021 22:22:23,alerter_two
+fatal,20211021 22:22:24,alerter_two
+error,20211021 22:22:25,alerter_one

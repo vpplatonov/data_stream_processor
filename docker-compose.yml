@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+
+  data_stream_process:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: python main.py
+    volumes:
+      - ./csv:/home/app/csv
