@@ -60,6 +60,25 @@ def test_plugin_one(chunk, plugin_one):
         assert result == [3]
 
 
+def test_plugins_test_case(app):
+    """ use test_case plugin_one data """
+    # TODO: parametrize it
+
+    for plugin in app._plugins:
+        test_case = plugin.test_case()
+        if not test_case:
+            pytest.fail(f"not valid test case data: {test_case}")
+        test_case["logger"] = logger
+        try:
+            result = plugin.process(
+                **test_case
+            )
+        except Exception as e_info:
+            pytest.fail(f"{e_info}")
+        else:
+            assert result == test_case["assertion"]
+
+
 def test_plugin_two(chunk, plugin_two):
     chnk, file, idx = chunk
     assert not chnk.empty
